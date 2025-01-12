@@ -4,6 +4,13 @@
  */
 package com.mycompany.LibraryManagementSystem;
 
+import javax.swing.JOptionPane;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.ResultSet;
+
 /**
  *
  * @author Stephane
@@ -117,7 +124,38 @@ public class LoginPage extends javax.swing.JFrame {
     }//GEN-LAST:event_usernameActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        String url = "";
+        String mysqluser = "root";
+        String mysqlpwd = "N-Steph1470*";
+        String pswrd = new String(password.getPassword());
+        String user = username.getText();
+        String query = ("select PASSWORD from admin WHERE USER_ID ='"+user+"';");
+        try {
+            Connection conn = DriverManager.getConnection(url, mysqluser, mysqlpwd);
+            Statement stm = conn.createStatement();
+            ResultSet rs = stm.executeQuery(query);
+            if (rs.next())
+            {
+                String realpswrd=rs.getString("");
+                
+                if(realpswrd.equals(pswrd))
+                {
+                    Dashboard dsh = new Dashboard();
+                    dsh.setVisible(true);
+                    this.dispose();
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(this, "username or password incorrect");
+                }
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(this, "wrong username");
+            }
+        }
+        catch(SQLException e)
+        { JOptionPane.showMessageDialog(this, e.getMessage());}
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void passwordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passwordActionPerformed
